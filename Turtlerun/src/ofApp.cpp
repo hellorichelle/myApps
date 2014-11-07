@@ -2,31 +2,32 @@
 #include "ofMain.h"
 #include <iostream>
 
-float playerX;
-float playerY;
-float bodyWidth;
-float bodyHeight;
 
-float enemyX;
-float enemyY;
-float enemyWidth;
-float enemyHeight;
-float enemySpeed;
+		float playerX;
+	float playerY;
+	float bodyWidth;
+	float bodyHeight;
 
-int downKey;
-int upKey;
-int leftKey;
-int rightKey;
+	float enemyX;
+	float enemyY;
+	float enemyWidth;
+	float enemyHeight;
+	float enemySpeed;
 
-int combo=0;
-vector<int> combination;
-bool gameOver=false;
-bool gameWin=false;
+	int downKey;
+	int upKey;
+	int leftKey;
+	int rightKey;
 
-int line=0;
-vector<string> instruction;
+	int combo;
+	vector<int> combination;
+	bool gameOver;
+	bool gameWin;
 
-int i;
+	int line;
+	vector<string> instruction;
+
+	int i;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -51,12 +52,14 @@ void ofApp::setup(){
 	leftKey = 37;
 	rightKey = 39;
 
+	//Filling in the vector Combination
 	combination.push_back(OF_KEY_DOWN);
 	combination.push_back(OF_KEY_UP);
 	combination.push_back(OF_KEY_LEFT);
 	combination.push_back(OF_KEY_RIGHT);
 	combination.push_back(OF_KEY_DOWN);
 
+	//Fillinf in the vector instructions
 	instruction.push_back("To move forward you must remember this combination. Press the DOWN-key");
 	instruction.push_back("Press the UP-key");
 	instruction.push_back("Press the LEFT-key");
@@ -69,13 +72,17 @@ void ofApp::setup(){
 
 	cout<<instruction[line];
 
+	//setting the game states
+	gameOver=false;
+	gameWin=false;
 
-
+	combo=0;
+	line=0;
 
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){
+void ofApp::update(){ //Set the game over statement
 	if(gameOver==false&&gameWin==false){
 		enemySpeed++;
 		enemyX+= enemySpeed/100;
@@ -108,7 +115,10 @@ ofCircle(enemyX, enemyY, enemyWidth);
 ofSetColor (0,0,255);
 ofCircle(playerX, playerY, bodyWidth);
 
+//Show the instructions in screen
 ofDrawBitmapString(instruction[line],20,20);
+
+//Draw the game over state
 	if(gameOver){
 			ofDrawBitmapString("LOSE",200,200);
 	}
@@ -125,14 +135,14 @@ void ofApp::keyPressed(int key){
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
+void ofApp::keyReleased(int key){ 
 	if (gameOver==false&&gameWin==false){
-		if(key==OF_KEY_DOWN || key == OF_KEY_UP || key == OF_KEY_LEFT || key == OF_KEY_RIGHT){
-			pushKey(key);
+		if(key==OF_KEY_DOWN || key == OF_KEY_UP || key == OF_KEY_LEFT || key == OF_KEY_RIGHT){ //Check is either of these keys are pressed
+			pushKey(key); //Send the pressed key to void Pushkey
 		}
 	}
 
-	if(key==OF_KEY_F1){
+	if(key==OF_KEY_F1){ // Restart the game
 		if(gameOver||gameWin){
 			enemyX = 0;
 			enemySpeed=0;
@@ -146,9 +156,9 @@ void ofApp::keyReleased(int key){
 	
 }
 
-void ofApp::pushKey(int key){
-	if (combination[combo] == key){
-		if (combo == 4){
+void ofApp::pushKey(int key){ //Checks the combination of keys
+	if (combination[combo] == key){  //Checks if the number saved in combo (vector) is same as the pressed key
+		if (combo == 4){ //If the last of the vector is reached, reloop
 			combo =0;
 		}
 		playerX=playerX+20;
@@ -161,7 +171,7 @@ void ofApp::pushKey(int key){
 		
 	}
 	else {
-		if(combo==0){
+		if(combo==0){ //If it's at the beginning of the vector don't go below 0
 			combo=combo+1;
 		}
 		playerX= playerX-20;
